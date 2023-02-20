@@ -2,7 +2,7 @@ Resources:
   EcsCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: "DEV"
+      ClusterName: "STAGE"
 
 
   TaskExecutionRole:
@@ -27,8 +27,8 @@ Resources:
       Family: "node-task-definition-dev"
       ExecutionRoleArn: !Ref TaskExecutionRole
       ContainerDefinitions:
-        - Name: "node-container"
-          Image: "875525659788.dkr.ecr.us-east-1.amazonaws.com/alpine:latest"
+        - Name: "node-br"
+          Image: "991492039835.dkr.ecr.us-east-1.amazonaws.com/node:latest"
 
           Essential: true
           PortMappings:
@@ -52,9 +52,9 @@ Resources:
       AwsvpcConfiguration:
         AssignPublicIp: ENABLED
         Subnets:
-          - "subnet-0235365c2551a38c5"
+          - "subnet-075c36228ac9a4c43"
         SecurityGroups:
-          - "sg-00d1ad79320c5e562"
+          - "sg-06cfbbd9e3ce82854"
         
         
     PlatformVersion: LATEST
@@ -63,7 +63,7 @@ Resources:
   MyS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: nakbdscvckjbvjbkvvkjwbvsn
+      BucketName: node-project-stage-env
 
   
 
@@ -105,7 +105,7 @@ Resources:
   MyCodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
-      Name: node-codebuild-dev
+      Name: node-stage
       ServiceRole: !GetAtt CodeBuildServiceRole.Arn
       Source:
         Type: GITHUB
@@ -177,7 +177,7 @@ Resources:
   MyCodePipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
-      Name: node-pipeline-dev
+      Name: node-pipeline-stage
       RoleArn: !GetAtt CodePipelineServiceRole.Arn
       ArtifactStore:
         Type: S3
@@ -208,7 +208,7 @@ Resources:
                 Version: "1"
                 Provider: CodeBuild
               Configuration:
-                ProjectName: node-codebuild-dev
+                ProjectName: node-dev
               InputArtifacts:
                 - Name: App
               OutputArtifacts:
